@@ -3,7 +3,7 @@ import { LoadingController, IonicPage, NavController, NavParams } from 'ionic-an
 
 import { TeamHomePage, TournamentsPage } from './../pages';
 
-import { EliteApiService } from './../../services/services';
+import { EliteApiService, UserSettingsService } from './../../services/services';
 
 @IonicPage()
 @Component({
@@ -12,23 +12,24 @@ import { EliteApiService } from './../../services/services';
 })
 export class MyTeamsPage {
 
-  favourites = [
-    {
-      team: {id: 6182, name: "HC Elite 7th", coach: "Michelotti"},
-      tournamentId: "3dd50aaf-6b03-4497-b074-d81703f07ee8",
-      tournamentName: "Marche Madness Tournament"
-    }
-  ];
+  favourites = [];
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public loadingController: LoadingController,
-    public eliteApi: EliteApiService) {
+    public eliteApi: EliteApiService,
+    public userSettings: UserSettingsService) {
+      this.userSettings.getAllFavorites().then(res => {
+        this.favourites = res;
+      });      
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MyTeamsPage');
+  }
+
+  ionViewDidEnter(){
   }
 
   favouriteTapped($event, favorite){

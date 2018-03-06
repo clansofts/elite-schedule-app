@@ -4,7 +4,7 @@ import { AlertController, IonicPage, NavController, NavParams, ToastController }
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
-import { EliteApiService } from './../../services/services';
+import { EliteApiService, UserSettingsService } from './../../services/services';
 import { GamePage } from './../game/game';
 
 @IonicPage()
@@ -27,7 +27,8 @@ export class TeamDetailPage {
               public navParams: NavParams,
               public eliteApi: EliteApiService,
               public alertCtrl: AlertController,
-              public toastCtrl: ToastController) {
+              public toastCtrl: ToastController,
+              public userSettings: UserSettingsService) {
     this.team = this.navParams.data;
     this.tourneyData = this.eliteApi.getCurrentTourney();
     this.teamStanding = _.find(this.tourneyData.standings, {'teamId' : this.team.id});
@@ -56,6 +57,7 @@ export class TeamDetailPage {
 
       this.allGames = this.games;
       this.teamStanding = _.find(this.tourneyData.standings, {'teamId': this.team.id});
+      this.userSettings.isFavoriteTeam(this.team.id.toString()).then(value => this.isFollowing = value);
   }
 
   getScoreDisplay(isTeam1, team1Score, team2Score){
@@ -101,6 +103,8 @@ export class TeamDetailPage {
             handler: () => {
               this.isFollowing = false;
 
+              this.userSettings.unfavoriteTeam(this.team);
+
               let toast = this.toastCtrl.create({
                 message: 'You have unfollowed the team',
                 duration: 2000,
@@ -115,6 +119,11 @@ export class TeamDetailPage {
       confirm.present();
     } else {
       this.isFollowing = true;
+      this.userSettings.favoriteTeam(
+        this.team,
+        this.tourneyData.tournament.id,
+        this.tourneyData.tournament.name
+      );
     }
   }
 }
