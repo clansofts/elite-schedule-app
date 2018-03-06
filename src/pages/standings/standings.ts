@@ -11,9 +11,10 @@ import * as _ from 'lodash';
 })
 export class StandingsPage {
 
-  allStandings: any[];
-  standings: any[];
-  team: any;
+  public allStandings: any[];
+  public standings: any[];
+  public team: any;
+  public divisionFilter = 'division';
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public eliteApi: EliteApiService) {
   }
@@ -33,6 +34,7 @@ export class StandingsPage {
     //   .map(item => _.zipObject(['divisionName', 'divisionStandings'], item))
     //   .value();
 
+    this.filterDivision();
     console.log('standings:', this.standings);
     console.log('division Standings', this.allStandings);
   }
@@ -42,6 +44,14 @@ export class StandingsPage {
       return record.division;
     }
     return null;
+  }
+
+  filterDivision(){
+    if(this.divisionFilter === "all"){
+      this.standings = this.allStandings;
+    } else {
+      this.standings = _.filter(this.allStandings, s => s.division === this.team.division);
+    }
   }
 
 }
