@@ -4,6 +4,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { EliteApiService } from './../../services/services';
 
 import { TeamHomePage } from './../pages'
+import { MapPage } from './../pages'
 
 @IonicPage()
 @Component({
@@ -35,7 +36,7 @@ export class GamePage {
   }
 
   goToMap(){
-
+    this.navCtrl.push(MapPage, this.game);
   }
 
   isWinner(score1, score2){
