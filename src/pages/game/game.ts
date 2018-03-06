@@ -12,7 +12,7 @@ import { TeamHomePage } from './../pages'
 })
 export class GamePage {
 
-  game: any;
+  public game: any;
 
     constructor(public navCtrl: NavController, public navParams: NavParams, public eliteApi: EliteApiService) {
       this.game = this.navParams.data;
@@ -20,12 +20,26 @@ export class GamePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad GamePage');
+
+    this.game.gameTime = Date.parse(this.game.time);
   }
 
   teamTapped(teamId){
     let tourneyData = this.eliteApi.getCurrentTourney();
     let team = tourneyData.teams.find(t => t.id === teamId);
     this.navCtrl.push(TeamHomePage, team);
+  }
+
+  goToDirections(){
+
+  }
+
+  goToMap(){
+
+  }
+
+  isWinner(score1, score2){
+    return Number(score1) > Number(score2) ? 'primary' : 'danger';
   }
 
 }
